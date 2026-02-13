@@ -19,11 +19,23 @@ interface UseEpisodeManagerReturn {
 export function useEpisodeManager({ movie }: UseEpisodeManagerProps): UseEpisodeManagerReturn {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const serverParam = searchParams.get('server')
   const episodeParam = searchParams.get('episode')
 
   const findEpisodeBySlug = useCallback(
-    (slug: string) => {
+    (slug: string, serverName?: string | null) => {
       if (!movie.episodes) return null
+
+      // If server specified, try to find in that server first
+      if (serverName) {
+        const server = movie.episodes.find((s) => s.server_name === serverName)
+        if (server) {
+          const found = server.server_data.find((ep) => ep.slug === slug)
+          if (found) return { serverName: server.server_name, episode: found }
+        }
+      }
+
+      // Fallback to searching all servers (existing logic)
       for (const server of movie.episodes) {
         const found = server.server_data.find((ep) => ep.slug === slug)
         if (found) return { serverName: server.server_name, episode: found }
@@ -33,7 +45,7 @@ export function useEpisodeManager({ movie }: UseEpisodeManagerProps): UseEpisode
     [movie.episodes]
   )
 
-  const resolvedEpisode = episodeParam ? findEpisodeBySlug(episodeParam) : null
+  const resolvedEpisode = episodeParam ? findEpisodeBySlug(episodeParam, serverParam) : null
 
   const currentServer = resolvedEpisode?.serverName ?? movie.episodes?.[0]?.server_name
 
@@ -51,7 +63,10 @@ export function useEpisodeManager({ movie }: UseEpisodeManagerProps): UseEpisode
 
       if (episode) {
         setShouldAutoPlay(true)
-        router.push(`/phim/${movie.slug}?episode=${episodeSlug}`, { scroll: false })
+        const params = new URLSearchParams()
+        params.set('episode', episodeSlug)
+        params.set('server', serverName)
+        router.push(`/phim/${movie.slug}?${params.toString()}`, { scroll: false })
       }
     },
     [currentEpisode, currentServer, movie.episodes, movie.slug, router]
