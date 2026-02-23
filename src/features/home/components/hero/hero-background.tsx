@@ -18,13 +18,11 @@ const CINEMA_EASE = [0.25, 1, 0.5, 1] as const
 const bgVariants: Variants = {
   enter: (_: number) => ({
     opacity: 0,
-    scale: 1,
-    filter: 'blur(8px) brightness(0.4)'
+    scale: 1
   }),
   center: {
     opacity: 1,
     scale: 1,
-    filter: 'blur(0px) brightness(1)',
     transition: {
       duration: 1.5,
       ease: CINEMA_EASE
@@ -33,7 +31,6 @@ const bgVariants: Variants = {
   exit: (_: number) => ({
     opacity: 0,
     scale: 1.05,
-    filter: 'blur(4px) brightness(0.6)',
     transition: {
       duration: 0.8,
       ease: CINEMA_EASE
@@ -76,15 +73,21 @@ export function HeroBackground({ movie, isActive, direction, priority = false }:
         {isActive && (
           <motion.div
             key={`bg-${movie._id}`}
-            className="absolute inset-0 z-0"
+            className="absolute inset-0 z-0 will-change-transform"
             custom={direction}
             variants={bgVariants}
             initial="enter"
             animate="center"
             exit="exit"
+            style={{ WebkitTransform: 'translateZ(0)' }}
           >
             {/* 1. Base Image with Zoom In */}
-            <motion.div className="w-full h-full relative" variants={zoomInVariants} animate="animate">
+            <motion.div
+              className="w-full h-full relative will-change-transform"
+              variants={zoomInVariants}
+              animate="animate"
+              style={{ WebkitTransform: 'translateZ(0)' }}
+            >
               <ImageWithFallback
                 src={posterUrl}
                 alt={movie.name}

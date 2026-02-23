@@ -34,7 +34,7 @@ export function MobileMenu({ genres, countries }: MobileMenuProps) {
         </SheetTrigger>
         <SheetContent
           side="left"
-          className="pr-0 bg-surface/98 backdrop-blur-xl border-r border-white/10 overflow-y-auto"
+          className="pr-0 bg-surface border-r border-white/10 overflow-y-auto will-change-transform transform-gpu"
         >
           <SheetTitle className="sr-only">Menu</SheetTitle>
           <SheetDescription className="sr-only">Mobile Navigation Menu</SheetDescription>

@@ -68,7 +68,7 @@ export function SearchResults({
                 className="flex items-start gap-4 p-3 hover:bg-white/5 transition-colors border-b border-white/5 last:border-0 cursor-pointer group"
               >
                 {/* Image */}
-                <div className="relative w-16 aspect-2/3 shrink-0 rounded-md overflow-hidden bg-white/10">
+                <div className="relative w-18 aspect-2/3 shrink-0 rounded-md overflow-hidden bg-white/10">
                   <ImageWithFallback
                     src={thumbUrl}
                     alt={movie.name}

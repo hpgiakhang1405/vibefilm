@@ -26,7 +26,7 @@ export function Header({ genres = [], countries = [] }: HeaderProps) {
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500',
+        'fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 will-change-transform transform-gpu',
         isScrolled
           ? 'bg-surface/95 backdrop-blur-lg shadow-lg shadow-black/20'
           : 'bg-transparent bg-linear-to-b from-black/70 to-transparent'

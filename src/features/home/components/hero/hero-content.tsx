@@ -36,13 +36,11 @@ const containerVariants: Variants = {
 const revealVariants: Variants = {
   hidden: {
     opacity: 0,
-    y: 30,
-    filter: 'blur(4px)'
+    y: 30
   },
   show: {
     opacity: 1,
     y: 0,
-    filter: 'blur(0px)',
     transition: {
       duration: 1.2,
       ease: CINEMA_EASE
@@ -74,11 +72,12 @@ export function HeroContent({ movie, isActive }: HeroContentProps) {
         {isActive && (
           <motion.div
             key={`content-${movie._id}`}
-            className="max-w-4xl space-y-5 md:space-y-7 pointer-events-auto"
+            className="max-w-4xl space-y-5 md:space-y-7 pointer-events-auto will-change-transform"
             variants={containerVariants}
             initial="hidden"
             animate="show"
             exit={{ opacity: 0, transition: { duration: 0.3 } }}
+            style={{ WebkitTransform: 'translateZ(0)' }}
           >
             {/* CATEGORY & YEAR */}
             <motion.div className="flex items-center gap-3 tracking-wider" variants={revealVariants}>
