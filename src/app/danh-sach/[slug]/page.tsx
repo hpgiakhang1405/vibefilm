@@ -1,7 +1,13 @@
 import { getListMovies } from '@/features/movies/services'
 import { MovieListPage } from '@/features/movies/components/movie-section-list'
-import { APP_ROUTES } from '@/lib/constants'
+import { APP_ROUTES, NAV_LIST_ITEMS } from '@/lib/constants'
 import { notFound } from 'next/navigation'
+
+export async function generateStaticParams() {
+  return NAV_LIST_ITEMS.map((item) => ({
+    slug: item.slug
+  }))
+}
 
 interface PageProps {
   params: Promise<{ slug: string }>

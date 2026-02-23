@@ -1,7 +1,14 @@
-import { getMoviesByCategory } from '@/features/movies/services'
+import { getMoviesByCategory, getGenres } from '@/features/movies/services'
 import { MovieListPage } from '@/features/movies/components/movie-section-list'
 import { APP_ROUTES } from '@/lib/constants'
 import { notFound } from 'next/navigation'
+
+export async function generateStaticParams() {
+  const genres = await getGenres()
+  return genres.map((genre) => ({
+    slug: genre.slug
+  }))
+}
 
 interface PageProps {
   params: Promise<{ slug: string }>

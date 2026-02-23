@@ -1,7 +1,14 @@
-import { getMoviesByCountry } from '@/features/movies/services'
+import { getMoviesByCountry, getCountries } from '@/features/movies/services'
 import { MovieListPage } from '@/features/movies/components/movie-section-list'
 import { APP_ROUTES } from '@/lib/constants'
 import { notFound } from 'next/navigation'
+
+export async function generateStaticParams() {
+  const countries = await getCountries()
+  return countries.map((country) => ({
+    slug: country.slug
+  }))
+}
 
 interface PageProps {
   params: Promise<{ slug: string }>

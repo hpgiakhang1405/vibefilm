@@ -18,7 +18,7 @@ interface SearchBarProps {
   onSearch?: () => void
 }
 
-export function SearchBar({ className, disableDropdown = false, onSearch }: SearchBarProps) {
+function SearchBarContent({ className, disableDropdown = false, onSearch }: SearchBarProps) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -165,5 +165,29 @@ export function SearchBar({ className, disableDropdown = false, onSearch }: Sear
         />
       )}
     </div>
+  )
+}
+
+function SearchBarFallback({ className }: { className?: string }) {
+  return (
+    <div className={cn('relative w-full z-50', className)}>
+      <div className="relative">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+        <Input
+          type="text"
+          disabled
+          placeholder={UI_TEXT.SEARCH_PLACEHOLDER}
+          className="h-12 w-full pl-12 pr-12 text-base bg-white/10 border-white/20 rounded-xl text-white placeholder:text-gray-400"
+        />
+      </div>
+    </div>
+  )
+}
+
+export function SearchBar(props: SearchBarProps) {
+  return (
+    <React.Suspense fallback={<SearchBarFallback className={props.className} />}>
+      <SearchBarContent {...props} />
+    </React.Suspense>
   )
 }
