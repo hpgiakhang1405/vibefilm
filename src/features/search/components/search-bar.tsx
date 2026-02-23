@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import { Search, X, Loader2 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -20,6 +20,8 @@ interface SearchBarProps {
 
 export function SearchBar({ className, disableDropdown = false, onSearch }: SearchBarProps) {
   const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
   const [query, setQuery] = React.useState('')
   const [results, setResults] = React.useState<Movie[]>([])
   const [isLoading, setIsLoading] = React.useState(false)
@@ -29,6 +31,11 @@ export function SearchBar({ className, disableDropdown = false, onSearch }: Sear
   const dropdownRef = React.useRef<HTMLDivElement>(null)
 
   const debouncedQuery = useDebounce(query, TIMING.DEBOUNCE_SEARCH)
+
+  // Reset loading state on route change
+  React.useEffect(() => {
+    setIsLoading(false)
+  }, [pathname, searchParams])
 
   // Search Effect
   React.useEffect(() => {
@@ -90,9 +97,10 @@ export function SearchBar({ className, disableDropdown = false, onSearch }: Sear
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (query.trim()) {
+      setIsLoading(true) // Force immediate feedback
       router.push(`${APP_ROUTES.SEARCH}?keyword=${encodeURIComponent(query.trim())}`)
       setIsOpen(false)
-      setQuery('')
+      // Do not clear query right away so user sees they searched for it
       inputRef.current?.blur()
       onSearch?.()
     }
@@ -100,15 +108,16 @@ export function SearchBar({ className, disableDropdown = false, onSearch }: Sear
 
   const handleResultClick = (slug: string) => {
     setIsOpen(false)
+    setIsLoading(true) // Force immediate feedback
     router.push(`${APP_ROUTES.MOVIE}/${slug}`)
     onSearch?.()
   }
 
   const handleViewAll = () => {
     if (query.trim()) {
+      setIsLoading(true) // Force immediate feedback
       router.push(`${APP_ROUTES.SEARCH}?keyword=${encodeURIComponent(query.trim())}`)
       setIsOpen(false)
-      setQuery('')
       onSearch?.()
     }
   }

@@ -29,6 +29,8 @@ export const metadata: Metadata = {
 
 import { getGenres, getCountries } from '@/features/movies/services'
 
+import NextTopLoader from 'nextjs-toploader'
+
 export default async function RootLayout({
   children
 }: Readonly<{
@@ -39,6 +41,7 @@ export default async function RootLayout({
   return (
     <html lang="vi" suppressHydrationWarning>
       <body className={`${beVietnamPro.className} overflow-x-hidden`}>
+        <NextTopLoader color="#E50914" height={3} showSpinner={false} />
         <ScrollFix />
         <MotionProvider>
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
